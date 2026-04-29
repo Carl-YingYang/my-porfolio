@@ -1,5 +1,5 @@
 /// <reference types="node" />
-import { CARL_KNOWLEDGE_BASE } from './knowledge';
+import { CARL_KNOWLEDGE_BASE } from './knowledge.js';
 
 export default async function handler(req: any, res: any) {
     if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
