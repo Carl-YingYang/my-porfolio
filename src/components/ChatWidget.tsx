@@ -1,13 +1,16 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { MessageSquareText, X, Send, User, Terminal } from 'lucide-react';
+import { X, Send, User, MessageSquareText } from 'lucide-react';
+
+// I-import ang O.M.N.I. PFP image
+import omniImg from '../assets/pfp/omni.png';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 type Message = {
     role: 'ai' | 'user';
     text: string;
-    isNew?: boolean; // Optional na para hindi mag-error sa user messages
+    isNew?: boolean;
 };
 
 // ─── Constants ────────────────────────────────────────────────────────────────
@@ -15,7 +18,7 @@ type Message = {
 const INITIAL_MESSAGE: Message = {
     role: 'ai',
     text: "O.M.N.I. System Online. I am Carl's Neural Interface. How can I assist you today regarding his projects, technical expertise, or professional availability?",
-    isNew: false, // False para solid agad ang welcome message
+    isNew: false,
 };
 
 // ─── TypingDots (Loading State) ───────────────────────────────────────────────
@@ -28,15 +31,14 @@ function TypingDots() {
             exit={{ opacity: 0 }}
             className="flex gap-3 max-w-[85%] mr-auto"
         >
-            <div className="w-8 h-8 rounded-lg bg-white/[0.02] border border-white/[0.05] flex items-center justify-center shrink-0 shadow-sm">
-                {/* Changed to Red Accent */}
-                <Terminal size={13} className="text-red-400" />
+            {/* AI Image for Loading State */}
+            <div className="w-8 h-8 rounded-lg bg-white/[0.02] border border-white/[0.05] flex items-center justify-center shrink-0 shadow-sm overflow-hidden">
+                <img src={omniImg} alt="OMNI" className="w-full h-full object-cover" />
             </div>
             <div className="px-5 flex items-center gap-[5px] h-10 bg-white/[0.02] border border-white/[0.05] rounded-xl rounded-tl-sm shadow-sm">
                 {[0, 1, 2].map((i) => (
                     <span
                         key={i}
-                        // Changed to Red Accent
                         className="block w-1.5 h-1.5 rounded-full bg-red-400/70 animate-bounce"
                         style={{ animationDuration: '0.9s', animationDelay: `${i * 0.18}s` }}
                     />
@@ -77,13 +79,17 @@ function MessageBubble({ msg, scrollToBottom }: { msg: Message; scrollToBottom: 
             transition={{ duration: 0.25 }}
             className={`flex gap-2.5 ${isUser ? 'ml-auto flex-row-reverse' : 'mr-auto'} max-w-[90%]`}
         >
-            {/* Avatar - Changed User background to Red */}
-            <div className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 border shadow-sm ${isUser ? 'bg-red-600 border-red-500/70' : 'bg-white/[0.02] border-white/[0.05]'
+            {/* Avatar - Image for AI, Icon for User */}
+            <div className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 border shadow-sm overflow-hidden ${isUser ? 'bg-red-600 border-red-500/70' : 'bg-white/[0.02] border-white/[0.05]'
                 }`}>
-                {isUser ? <User size={13} className="text-white" /> : <Terminal size={13} className="text-red-400" />}
+                {isUser ? (
+                    <User size={13} className="text-white" />
+                ) : (
+                    <img src={omniImg} alt="OMNI" className="w-full h-full object-cover" />
+                )}
             </div>
 
-            {/* Chat Bubble - Changed User bubble to Red */}
+            {/* Chat Bubble */}
             <div className={`px-4 py-3 text-[13px] leading-[1.6] shadow-sm ${isUser
                     ? 'bg-red-600 text-white rounded-xl rounded-tr-sm border border-red-500/60'
                     : 'bg-white/[0.02] border border-white/[0.05] text-zinc-300 rounded-xl rounded-tl-sm'
@@ -155,17 +161,15 @@ export default function ChatWidget() {
                         initial={{ opacity: 0, y: 20, scale: 0.98 }}
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: 20, scale: 0.98 }}
-                        // Changed background from #0a0a0a to #0c0303 to match the vintage red theme perfectly
                         className="w-[calc(100vw-3rem)] sm:w-[380px] h-[520px] max-h-[80vh] bg-[#0c0303]/95 backdrop-blur-3xl border border-white/[0.05] rounded-2xl shadow-2xl flex flex-col overflow-hidden mb-2"
                     >
                         {/* Header */}
                         <div className="flex items-center justify-between px-5 py-4 border-b border-white/[0.05] bg-white/[0.01]">
                             <div className="flex items-center gap-3">
-                                <div className="relative w-9 h-9 rounded-lg bg-white/[0.02] border border-white/[0.05] flex items-center justify-center">
-                                    <Terminal size={16} className="text-red-500" />
+                                <div className="relative w-9 h-9 rounded-lg bg-white/[0.02] border border-white/[0.05] flex items-center justify-center overflow-hidden">
+                                    <img src={omniImg} alt="OMNI" className="w-full h-full object-cover" />
                                     <span className="absolute -bottom-0.5 -right-0.5 flex h-2.5 w-2.5">
                                         <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-60" />
-                                        {/* Matches the dark red base */}
                                         <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-green-500 border-2 border-[#0c0303]" />
                                     </span>
                                 </div>
@@ -196,13 +200,11 @@ export default function ChatWidget() {
                                     value={input}
                                     onChange={(e) => setInput(e.target.value)}
                                     placeholder="Execute command..."
-                                    // Focus border changed to red
                                     className="flex-1 bg-white/[0.02] border border-white/[0.05] rounded-xl px-4 py-3 text-[13px] text-white placeholder-zinc-700 focus:outline-none focus:border-red-500/50 transition-all font-mono"
                                 />
                                 <button
                                     type="submit"
                                     disabled={!input.trim() || isTyping}
-                                    // Send Button changed to Red
                                     className="w-11 h-11 rounded-xl bg-red-600 text-white flex items-center justify-center hover:bg-red-500 disabled:opacity-20 transition-all"
                                 >
                                     <Send size={15} />
@@ -213,14 +215,14 @@ export default function ChatWidget() {
                 )}
             </AnimatePresence>
 
-            {/* Toggle Button - Changed to Red */}
+            {/* Toggle Button - Changed icon to MessageSquareText for better recognition */}
             <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => setIsOpen(!isOpen)}
                 className="w-14 h-14 md:w-16 md:h-16 bg-red-600 rounded-2xl shadow-lg border border-red-400/30 flex items-center justify-center text-white z-50 hover:bg-red-500 transition-colors"
             >
-                {isOpen ? <X size={24} /> : <Terminal size={24} />}
+                {isOpen ? <X size={24} /> : <MessageSquareText size={24} />}
             </motion.button>
         </div>
     );
