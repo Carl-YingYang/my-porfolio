@@ -1,0 +1,18 @@
+# Secret Environment Variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Vercel specifics
+.vercel
+
+# Build outputs
+dist
+dist-ssr
+/dist
+
+# OS files
+.DS_Store
+Thumbs.db

@@ -1,0 +1,98 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    /* Very dark reddish-black base para sa vintage vibe */
+    @apply bg-[#0c0303] text-white antialiased;
+    font-family: 'Inter', sans-serif;
+  }
+}
+
+/* ─── Vintage Film Grain / Noise Overlay ─── */
+/* Ito ang magbibigay ng "old camera / cinematic" texture sa buong site */
+.vintage-noise {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 5;
+  /* Binabaan para hindi humarang sa Chat Widget */
+  opacity: 0.04;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+}
+
+/* ─── Infinite Background Animation ─── */
+@keyframes float {
+  0% {
+    transform: translate(0, 0) scale(1);
+  }
+
+  33% {
+    transform: translate(4vw, -6vh) scale(1.05);
+  }
+
+  66% {
+    transform: translate(-3vw, 4vh) scale(0.95);
+  }
+
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+}
+
+@keyframes gradientPulse {
+  0% {
+    opacity: 0.4;
+  }
+
+  50% {
+    opacity: 0.8;
+  }
+
+  100% {
+    opacity: 0.4;
+  }
+}
+
+.animate-blob {
+  /* Pinagsama natin yung floating at pulsing effect */
+  animation: float 20s infinite alternate ease-in-out, gradientPulse 12s infinite ease-in-out;
+}
+
+.animation-delay-2000 {
+  animation-delay: 2s;
+}
+
+.animation-delay-4000 {
+  animation-delay: 4s;
+}
+
+/* ─── Smooth Scrolling & Dark Red Scrollbar ─── */
+html {
+  scroll-behavior: smooth;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0c0303;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #2a0808;
+  /* Dark crimson brown */
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #991b1b;
+  /* Tailwind Red-800 */
+}
