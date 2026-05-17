@@ -2,8 +2,8 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Code, ExternalLink, Lock, X, Info } from 'lucide-react';
 
-// Images & GIFs Imports
-import lexSimpleGif from '../assets/projects/lex-simple.gif';
+// Images & Video Imports
+import lexSimpleVid from '../assets/projects/LEXSIMPLE-vid.mp4';
 import tailorDropImg from '../assets/projects/ap-matrix.png.png';
 
 const projectsData = [
@@ -14,8 +14,9 @@ const projectsData = [
         problem: 'An technical legal contracts are unreadable for average filipino citizens, leading to potential exploitation through predatory clauses.',
         solution: 'An offline OCR and RAG-integrated system that acts as a Linguistic Bridge, simplifying complex text into conversational Taglish without offering unauthorized legal advice.',
         techStack: ['Python', 'OCR', 'RAG Architecture', 'AI Integration', 'React Native', 'Api Integration'],
-        image: lexSimpleGif,
-        liveLink: '#', // Dahil '#', hindi lalabas ang Live Preview button
+        media: lexSimpleVid,
+        mediaType: 'video', // Added identifier for rendering
+        liveLink: '#',
         githubLink: 'private',
         isWeb: false
     },
@@ -26,20 +27,45 @@ const projectsData = [
         problem: 'Inefficient manual processing and fragmented communication for bulk tailoring orders.',
         solution: 'An end-to-end e-commerce booking platform designed for multi-step order configurations and seamless business data transfer.',
         techStack: ['React Vite', 'Business Logic Design', 'Vercel', 'Hugging Face', 'GitHub', 'Python', 'Api Integration'],
-        image: tailorDropImg,
+        media: tailorDropImg,
+        mediaType: 'image', // Added identifier for rendering
         liveLink: 'https://ap-matrix-clothing-line.vercel.app/',
         githubLink: 'https://github.com/Carl-YingYang/A-P-Matrix-Clothing-Line.git',
         isWeb: true
     }
 ];
 
+// --- Sub-component for handling video with Native Controls & Mobile Phone Frame ---
+const ProjectVideo = ({ src, alt }: { src: string, alt: string }) => {
+    return (
+        <div className="relative z-10 w-full max-w-[260px] md:max-w-[280px] aspect-[9/19] bg-black border-[8px] md:border-[10px] border-[#1a1a1a] rounded-[3rem] shadow-[0_20px_50px_-12px_rgba(0,0,0,0.5)] mx-auto overflow-hidden ring-1 ring-white/10 group-hover:border-[#222] transition-colors">
+
+            {/* Phone Notch */}
+            <div className="absolute top-0 inset-x-0 flex justify-center z-20 pointer-events-none">
+                <div className="w-[40%] h-6 bg-[#1a1a1a] rounded-b-2xl"></div>
+            </div>
+
+            {/* Phone Screen / Video */}
+            <div className="w-full h-full bg-black relative">
+                <video
+                    src={src}
+                    title={alt}
+                    className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                    playsInline
+                    controls // Native controls (play, progress, volume, fullscreen)
+                    preload="metadata"
+                />
+            </div>
+        </div>
+    );
+};
+
 export default function Projects() {
-    // State para sa custom alert modal natin
     const [showAlert, setShowAlert] = useState(false);
 
     const handlePrivateRepoClick = (e: React.MouseEvent) => {
         e.preventDefault();
-        setShowAlert(true); // Imbes na native alert(), ito na ang itri-trigger natin
+        setShowAlert(true);
     };
 
     return (
@@ -139,7 +165,11 @@ export default function Projects() {
                             <div className={`lg:col-span-6 w-full relative flex items-center justify-center ${i % 2 !== 0 ? 'lg:order-last' : 'lg:order-first'}`}>
                                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] h-[80%] bg-red-600/10 blur-[80px] pointer-events-none group-hover:bg-red-500/20 transition-all duration-700 z-0"></div>
 
-                                {project.isWeb ? (
+                                {project.mediaType === 'video' ? (
+                                    /* Render Video Component (Now with Phone Frame) */
+                                    <ProjectVideo src={project.media} alt={project.title} />
+                                ) : project.isWeb ? (
+                                    /* Render Web/Laptop Frame */
                                     <div className="relative z-10 w-full sm:w-[110%] lg:w-[125%] max-w-none aspect-[16/10] bg-[#050505] border border-white/[0.05] rounded-xl flex flex-col overflow-hidden shadow-2xl group-hover:border-white/10 transition-colors">
                                         <div className="w-full bg-white/[0.02] border-b border-white/[0.05] px-4 py-2.5 flex items-center justify-between shrink-0">
                                             <div className="flex gap-1.5">
@@ -154,19 +184,26 @@ export default function Projects() {
                                         </div>
                                         <div className="w-full flex-1 relative bg-black overflow-hidden">
                                             <img
-                                                src={project.image}
+                                                src={project.media}
                                                 alt={project.title}
                                                 className="absolute inset-0 w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-700 ease-out"
                                             />
                                         </div>
                                     </div>
                                 ) : (
-                                    <div className="relative z-10 w-full max-w-[260px] md:max-w-[280px] aspect-[9/19] bg-white/[0.01] border border-white/[0.05] backdrop-blur-xl rounded-[2.5rem] p-4 flex items-center justify-center overflow-hidden shadow-2xl group-hover:border-white/10 transition-colors">
-                                        <div className="w-full h-full rounded-[1.8rem] overflow-hidden bg-black relative">
+                                    /* Fallback Mobile Image Frame (Matches the Phone Frame look) */
+                                    <div className="relative z-10 w-full max-w-[260px] md:max-w-[280px] aspect-[9/19] bg-black border-[8px] md:border-[10px] border-[#1a1a1a] rounded-[3rem] shadow-[0_20px_50px_-12px_rgba(0,0,0,0.5)] mx-auto overflow-hidden ring-1 ring-white/10 group-hover:border-[#222] transition-colors">
+
+                                        {/* Phone Notch */}
+                                        <div className="absolute top-0 inset-x-0 flex justify-center z-20 pointer-events-none">
+                                            <div className="w-[40%] h-6 bg-[#1a1a1a] rounded-b-2xl"></div>
+                                        </div>
+
+                                        <div className="w-full h-full bg-black relative">
                                             <img
-                                                src={project.image}
+                                                src={project.media}
                                                 alt={project.title}
-                                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
+                                                className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                                             />
                                         </div>
                                     </div>
